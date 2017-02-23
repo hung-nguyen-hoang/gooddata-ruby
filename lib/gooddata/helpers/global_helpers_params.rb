@@ -56,7 +56,7 @@ module GoodData
       # @params Parameter hash need to be decoded
       # @option options [Boolean] :resolve_reference_params Resolve reference parameters in gd_encoded_params or not
       # @return [Hash] Decoded parameters
-      def decode_params(params, options = {})
+      def decode_params(params, options = { :resolve_reference_params => true })
         convert_secure_params = lambda do |args|
           args = args.select { |k, _| k.include? "|" }
           lines = args.keys.map do |key|
