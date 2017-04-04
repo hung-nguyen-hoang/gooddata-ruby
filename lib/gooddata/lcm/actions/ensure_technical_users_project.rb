@@ -33,7 +33,7 @@ module GoodData
 
           client = params.gdc_gd_client
 
-          technical_users = params.technical_user || []
+          technical_users = params.technical_user.map || []
           new_users = technical_users.map do |technical_user|
             {
               login: technical_user,
