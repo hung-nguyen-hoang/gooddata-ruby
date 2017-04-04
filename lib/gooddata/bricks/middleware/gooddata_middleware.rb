@@ -93,7 +93,7 @@ module GoodData
             GoodData.connect(sst_token: sst_token, server: server, verify_ssl: verify_ssl)
           else
             puts "Connecting as #{username} to server #{server}"
-            GoodData.connect(username, password, server: server, verify_ssl: verify_ssl)
+            GoodData.connect(username, password, server: server, verify_ssl: false)
           end
         end
       end
