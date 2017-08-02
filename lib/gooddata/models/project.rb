@@ -371,10 +371,32 @@ module GoodData
         diff = GoodData::Helpers.diff(remote_stuff, local_stuff, key: :name, fields: [:name, :cron, :after, :params, :hidden_params, :reschedule, :state])
         stack = diff[:added].map do |x|
           [:added, x]
+
+          if x.nil? || x.empty?
+            GoodData.logger.info("Reproduce added creating schedule is empty")
+          end
+
+          if x[:name].empty?
+            GoodData.logger.info("Reproduce added creating schedule name is empty")
+          else
+            GoodData.logger.info("Reproduce added creating schedule name is #{x[:name]}")
+          end
+          
         end
 
         stack += diff[:changed].map do |x|
           [:changed, x]
+
+          if x.nil? || x.empty?
+            GoodData.logger.info("Reproduce changed creating schedule is empty")
+          end
+
+          if x[:name].empty?
+            GoodData.logger.info("Reproduce changed creating schedule name is empty")
+          else
+            GoodData.logger.info("Reproduce changed creating schedule name is #{x[:name]}")
+          end
+          
         end
 
         schedule_cache = remote_schedules.reduce({}) do |a, e|
@@ -388,6 +410,20 @@ module GoodData
           state, changed_schedule = stack.shift
           if state == :added
             schedule_spec = changed_schedule
+            
+            
+            if schedule_spec.nil? || schedule_spec.empty?
+              GoodData.logger.info("Reproduce creating schedule is empty")
+            end
+
+            if schedule_spec[:name].empty?
+              GoodData.logger.info("Reproduce creating schedule name is empty")
+            else
+              GoodData.logger.info("Reproduce creating schedule name is #{schedule_spec[:name]}")
+            end
+            
+            
+            
             if schedule_spec[:after] && !schedule_cache[schedule_spec[:after]]
               stack << [state, schedule_spec]
               next
