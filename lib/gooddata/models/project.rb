@@ -408,6 +408,16 @@ module GoodData
         loop do # rubocop:disable Metrics/BlockLength
           break if stack.empty?
           state, changed_schedule = stack.shift
+          
+          if changed_schedule.nil? || changed_schedule.empty?
+            if changed_schedule.nil?
+              GoodData.logger.info("changed_schedule is nil")
+            else
+              GoodData.logger.info("changed_schedule is empty")
+            end
+            next
+          end
+          
           if state == :added
             schedule_spec = changed_schedule
             
