@@ -54,15 +54,17 @@ module GoodData
               # Just for testing
               to_project_processes = to_project.processes
               from_project_processes = from.processes
-              GoodData.logger.debug("Processes in from project #{from.pid}: #{from_project_processes.map(&:type).join(', ')}")
-              GoodData.logger.debug("Processes in to project #{to_project.pid}: #{to_project_processes.map(&:type).join(', ')}")
-              
-              sleep 30
+              GoodData.logger.debug("Processes in from project #{from.pid}: #{from_project_processes.map(&:name).join(', ')}")
+              GoodData.logger.debug("Processes in to project #{to_project.pid}: #{to_project_processes.map(&:name).join(', ')}")
 
+              GoodData.logger.debug("Begin sleep 30 seconds")
+              sleep 30
+              GoodData.logger.debug("End sleep 30 seconds")
+              
               to_project_processes = to_project.processes
               from_project_processes = from.processes
-              GoodData.logger.debug("Processes in from project #{from.pid}: #{from_project_processes.map(&:type).join(', ')}")
-              GoodData.logger.debug("Processes in to project #{to_project.pid}: #{to_project_processes.map(&:type).join(', ')}")
+              GoodData.logger.debug("After sleep processes in from project #{from.pid}: #{from_project_processes.map(&:name).join(', ')}")
+              GoodData.logger.debug("After sleep processes in to project #{to_project.pid}: #{to_project_processes.map(&:name).join(', ')}")
               # End just for testing
               
               

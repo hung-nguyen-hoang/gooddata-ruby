@@ -370,7 +370,7 @@ module GoodData
 
         diff = GoodData::Helpers.diff(remote_stuff, local_stuff, key: :name, fields: [:name, :cron, :after, :params, :hidden_params, :reschedule, :state])
         stack = diff[:added].map do |x|
-          [:added, x]
+          
 
           if x.nil? || x.empty?
             GoodData.logger.info("Reproduce added creating schedule is empty")
@@ -381,11 +381,12 @@ module GoodData
           else
             GoodData.logger.info("Reproduce added creating schedule name is #{x[:name]}")
           end
-          
+
+          [:added, x]
         end
 
         stack += diff[:changed].map do |x|
-          [:changed, x]
+          
 
           if x.nil? || x.empty?
             GoodData.logger.info("Reproduce changed creating schedule is empty")
@@ -396,7 +397,8 @@ module GoodData
           else
             GoodData.logger.info("Reproduce changed creating schedule name is #{x[:name]}")
           end
-          
+
+          [:changed, x]
         end
 
         schedule_cache = remote_schedules.reduce({}) do |a, e|
@@ -409,11 +411,13 @@ module GoodData
           break if stack.empty?
           state, changed_schedule = stack.shift
           
-          if changed_schedule.nil? || changed_schedule.empty?
+          if !changed_schedule.nil? && !changed_schedule.empty?
+            GoodData.logger.info("changed_schedule is not empty with name #{changed_schedule[:name]} state #{state}")
+          else
             if changed_schedule.nil?
-              GoodData.logger.info("changed_schedule is nil")
+              GoodData.logger.info("changed_schedule is nil with state #{state}")
             else
-              GoodData.logger.info("changed_schedule is empty")
+              GoodData.logger.info("changed_schedule is empty with state #{state}")
             end
             next
           end
