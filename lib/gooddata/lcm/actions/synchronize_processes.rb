@@ -51,6 +51,21 @@ module GoodData
               params.gdc_logger.info "Transferring processes, from project: '#{from.title}', PID: '#{from.pid}', to project: '#{to_project.title}', PID: '#{to_project.pid}'"
               res = GoodData::Project.transfer_processes(from, to_project, ads_output_stage_uri: info.ads_output_stage_uri)
 
+              # Just for testing
+              to_project_processes = to_project.processes
+              from_project_processes = from.processes
+              GoodData.logger.debug("Processes in from project #{from.pid}: #{from_project_processes.map(&:type).join(', ')}")
+              GoodData.logger.debug("Processes in to project #{to_project.pid}: #{to_project_processes.map(&:type).join(', ')}")
+              
+              sleep 30
+
+              to_project_processes = to_project.processes
+              from_project_processes = from.processes
+              GoodData.logger.debug("Processes in from project #{from.pid}: #{from_project_processes.map(&:type).join(', ')}")
+              GoodData.logger.debug("Processes in to project #{to_project.pid}: #{to_project_processes.map(&:type).join(', ')}")
+              # End just for testing
+              
+              
               to_project.add.output_stage.client_id = client_id if client_id && to_project.add.output_stage
 
               results << res
