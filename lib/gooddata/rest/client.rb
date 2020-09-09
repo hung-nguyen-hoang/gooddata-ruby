@@ -99,7 +99,8 @@ module GoodData
             new_opts[:password] = password
           end
 
-          new_opts = { verify_ssl: true, execution_id: execution_id }.merge(new_opts)
+          # Default using TLSv1.2
+          new_opts = { verify_ssl: true, ssl_version: 'TLSv1.2', execution_id: execution_id }.merge(new_opts)
           if username.is_a?(Hash) && username[:cookies]
             new_opts[:sst_token] = username[:cookies]['GDCAuthSST']
             new_opts[:cookies] = username[:cookies]

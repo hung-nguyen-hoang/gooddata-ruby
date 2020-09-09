@@ -47,9 +47,11 @@ module GoodData
       CERTIFICATE_STORE = OpenSSL::X509::Store.new.freeze
       CERTIFICATE_STORE.set_default_paths
 
+      DEFAULT_SSL_VERSION = 'TLSv1.2'
       DEFAULT_LOGIN_PAYLOAD = {
         :headers => DEFAULT_HEADERS,
         :verify_ssl => true,
+        :ssl_version => DEFAULT_SSL_VERSION,
         :ssl_cert_store => CERTIFICATE_STORE
       }
 
@@ -136,6 +138,7 @@ module GoodData
       attr_reader :stats
       attr_reader :user
       attr_reader :verify_ssl
+      attr_reader :ssl_version
 
       def initialize(opts)
         super()
@@ -149,6 +152,7 @@ module GoodData
         @server = nil
         @opts = opts
         @verify_ssl = @opts[:verify_ssl] == false || @opts[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE ? OpenSSL::SSL::VERIFY_NONE : OpenSSL::SSL::VERIFY_PEER
+        @ssl_version = @opts[:ssl_version] || DEFAULT_SSL_VERSION
 
         # Initialize headers
         reset_headers!
@@ -277,7 +281,8 @@ module GoodData
             :headers => @webdav_headers.merge(:x_gdc_authtt => headers[:x_gdc_authtt]),
             :method => :get,
             :url => url,
-            :verify_ssl => verify_ssl
+            :verify_ssl => verify_ssl,
+            :ssl_version => ssl_version
           }
           RestClient::Request.execute(raw) do |chunk, _x, response|
             if response.code.to_s == '202'
@@ -495,7 +500,8 @@ module GoodData
             :method => method,
             :url => url,
             :headers => @webdav_headers.merge(:x_gdc_authtt => headers[:x_gdc_authtt]),
-            :verify_ssl => verify_ssl
+            :verify_ssl => verify_ssl,
+            :ssl_version => ssl_version
           }
           RestClient::Request.execute(raw)
         end
@@ -511,6 +517,7 @@ module GoodData
         request = RestClient::Request.new(:method => :put,
                                           :url => uri.to_s,
                                           :verify_ssl => verify_ssl,
+                                          :ssl_version => ssl_version,
                                           :headers => @webdav_headers.merge(:x_gdc_authtt => headers[:x_gdc_authtt]),
                                           :payload => File.new(filename, 'rb'))
 
@@ -700,7 +707,8 @@ ERR
             :method => method,
             :url => url,
             :headers => @webdav_headers.merge(:x_gdc_authtt => headers[:x_gdc_authtt]),
-            :verify_ssl => verify_ssl
+            :verify_ssl => verify_ssl,
+            :ssl_version => ssl_version
           }.merge(headers)
           begin
             RestClient::Request.execute(raw)
